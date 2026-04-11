@@ -6,13 +6,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     name: 'jump',
     aliases: ['j', 'skipto', 'goto'],
-    description: 'Jump to a specific song in queue',
+    description: 'Skoči na određenu pjesmu u redu čekanja',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -27,7 +27,7 @@ module.exports = {
         const position = parseInt(args[0]);
         
         if (!position || position < 1) {
-            const embed = new EmbedBuilder().setDescription('❌ Please provide a valid position number! Example: `!jump 5`');
+            const embed = new EmbedBuilder().setDescription('❌ Molimo unesite validan broj pozicije! Primjer: `!jump 5`');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
@@ -43,13 +43,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer || conditions.queueLength === 0) {
-                const embed = new EmbedBuilder().setDescription('❌ Queue is empty!');
+                const embed = new EmbedBuilder().setDescription('❌ Red čekanja je prazan!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (position > conditions.queueLength) {
-                const embed = new EmbedBuilder().setDescription(`❌ Invalid position! Queue has only ${conditions.queueLength} songs.`);
+                const embed = new EmbedBuilder().setDescription(`❌ Nevažeća pozicija! Red čekanja ima samo ${conditions.queueLength} pjesama.`);
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -61,13 +61,13 @@ module.exports = {
 
             player.stop();
 
-            const embed = new EmbedBuilder().setDescription(`⏭️ Jumped to position ${position} in queue!`);
+            const embed = new EmbedBuilder().setDescription(`⏭️ Skočeno na poziciju ${position} u redu čekanja!`);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Jump command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while jumping in queue!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri skakanju u redu čekanja!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
