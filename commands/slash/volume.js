@@ -6,10 +6,10 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('volume')
-        .setDescription('Set the music volume')
+        .setDescription('Podesi jačinu zvuka')
         .addIntegerOption(option =>
             option.setName('level')
-                .setDescription('Volume level (1-100)')
+                .setDescription('Nivo jačine zvuka (1-100)')
                 .setMinValue(1)
                 .setMaxValue(100)
                 .setRequired(true)
@@ -19,7 +19,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -40,13 +40,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno ne svira nikakva muzika!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
 
             if (!conditions.sameVoiceChannel) {
-                const embed = new EmbedBuilder().setDescription('❌ You need to be in the same voice channel as the bot!');
+                const embed = new EmbedBuilder().setDescription('❌ Morate biti u istom glasovnom kanalu kao bot!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -55,13 +55,13 @@ module.exports = {
             const player = conditions.player;
             player.setVolume(volume);
 
-            const embed = new EmbedBuilder().setDescription(`🔊 Volume set to **${volume}%**`);
+            const embed = new EmbedBuilder().setDescription(`🔊 Jačina zvuka postavljena na **${volume}%**`);
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Volume command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while setting volume!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri podešavanju jačine zvuka!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }
