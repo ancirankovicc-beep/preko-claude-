@@ -6,9 +6,7 @@
  * @version 1.0.0
  * @author GlaceYT
  */
-
 const EnvironmentVariableProcessor = require('process').env;
-
 class EnterpriseConfigurationManager {
     constructor() {
         this.initializeConfigurationFramework();
@@ -29,10 +27,10 @@ class EnterpriseConfigurationManager {
              * 🎵 LAVALINK AUDIO SERVER CONFIGURATION
              * Configure your Lavalink server for audio processing
              */
-           lavalink: {
-                host: EnvironmentVariableProcessor.LAVALINK_HOST || "de-01.strixnodes.com", 
-                port: EnvironmentVariableProcessor.LAVALINK_PORT || 2010,       
-                password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "glace", 
+            lavalink: {
+                host: EnvironmentVariableProcessor.LAVALINK_HOST || "87.106.62.92", 
+                port: EnvironmentVariableProcessor.LAVALINK_PORT || 9258,       
+                password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "zenkai-og", 
                 secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || false
             },     
             /**
@@ -40,11 +38,11 @@ class EnterpriseConfigurationManager {
              * Customize your bot's appearance and basic behavior
              */
             bot: {
-                prefix: EnvironmentVariableProcessor.BOT_PREFIX || "!",  // 👈 prefix (!, ?, etc)
-                ownerIds: ["1004206704994566164"],      // 👈 ADD YOUR DISCORD ID HERE
-                embedColor: 0x00AE86,               // 👈 Bot embed color (hex)
-                supportServer: "https://discord.gg/xQF9f9yUEM",    // 👈 Your support server link
-                defaultStatus: "🎵 Ready for music!"         // 👈 Bot status message
+                prefix: EnvironmentVariableProcessor.BOT_PREFIX || "!",
+                ownerIds: ["1004206704994566164"],
+                embedColor: 0x00AE86,
+                supportServer: "https://discord.gg/xQF9f9yUEM",
+                defaultStatus: "🎵 Ready for music!"
             },
             
             features: this.constructAdvancedFeatureConfiguration()
@@ -53,27 +51,24 @@ class EnterpriseConfigurationManager {
     
     constructAdvancedFeatureConfiguration() {
         return {
-            autoplay: true,           // 👈 Auto-play related songs when queue ends
-            centralSystem: true,      // 👈 Enable central music control system
-            autoVcCreation: true,     // 👈 🔥 PREMIUM: Auto voice channel creation
-            updateStatus: true,       // 👈 Update bot status with current song  
-            autoDeaf: true,           // 👈 Auto-deafen bot in voice channels
-            autoMute: false,          // 👈 Auto-mute bot in voice channels
-            resetOnEnd: true          // 👈 Reset player when queue ends
+            autoplay: true,
+            centralSystem: true,
+            autoVcCreation: true,
+            updateStatus: true,
+            autoDeaf: true,
+            autoMute: false,
+            resetOnEnd: true
         };
     }
 }
-
 const enterpriseConfigurationInstance = new EnterpriseConfigurationManager();
 const primaryApplicationConfiguration = enterpriseConfigurationInstance.initializeConfigurationFramework();
-
 /**
  * Export configuration for application-wide utilization
  * 
  * @type {Object} Comprehensive application configuration object
  */
 module.exports = primaryApplicationConfiguration;
-
 /**
  * =========================================
  * 📚 CONFIGURATION GUIDE FOR USERS
@@ -100,8 +95,3 @@ module.exports = primaryApplicationConfiguration;
  * Never share your bot token or database URI publicly!
  * Use environment variables in production!
  */
-
-
-
-
-
