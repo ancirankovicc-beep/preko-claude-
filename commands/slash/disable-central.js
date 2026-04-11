@@ -7,14 +7,14 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('disable-central')
-        .setDescription('Disable the central music system')
+        .setDescription('Onemogući centralni muzički sistem')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageChannels),
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -31,7 +31,7 @@ module.exports = {
             
             if (!serverConfig?.centralSetup?.enabled) {
                 return interaction.editReply({
-                    content: '❌ Central music system is not currently setup!',
+                    content: '❌ Centralni muzički sistem trenutno nije postavljen!',
                     ephemeral: true
                 });
             }
@@ -51,18 +51,17 @@ module.exports = {
             });
 
             const embed = new EmbedBuilder()
-                .setTitle('✅ Central Music System Disabled')
-                .setDescription('The central music system has been disabled and embed removed.')
+                .setTitle('✅ Centralni muzički sistem onemogućen')
+                .setDescription('Centralni muzički sistem je onemogućen i embed je uklonjen.')
                 .setColor(0xFF6B6B)
-                .setFooter({ text: 'You can re-enable it anytime with /setup-central' });
+                .setFooter({ text: 'Možete ga ponovo omogućiti komandom /setup-central' });
 
             await interaction.editReply({ embeds: [embed] });
 
         } catch (error) {
             console.error('Error disabling central system:', error);
-            
             await interaction.editReply({
-                content: '❌ An error occurred while disabling the central music system!',
+                content: '❌ Došlo je do greške pri onemogućavanju centralnog muzičkog sistema!',
                 ephemeral: true
             });
         }
