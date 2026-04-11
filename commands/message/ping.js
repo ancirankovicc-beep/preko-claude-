@@ -5,13 +5,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     name: 'ping',
-    description: 'Check the bot\'s latency and uptime',
+    description: 'Provjeri kašnjenje i uptime bota',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -30,17 +30,17 @@ module.exports = {
                 .setTitle('📡 Pong!')
                 .setColor(0x1DB954)
                 .setDescription(
-                    `• **Latency:** ${latency} ms\n` +
+                    `• **Kašnjenje:** ${latency} ms\n` +
                     `• **API Ping:** ${Math.round(client.ws.ping)} ms\n` +
                     `• **Uptime:** ${hours}h ${minutes}m ${seconds}s`
                 )
                 .setTimestamp()
-                .setFooter({ text: 'Ultimate Music Bot • Developed by GlaceYT' });
+                .setFooter({ text: 'Ultimate Music Bot • Razvio GlaceYT' });
 
             await message.reply({ embeds: [embed] });
         } catch (error) {
             console.error('Ping command error:', error);
-            await message.reply('❌ An error occurred while checking ping.');
+            await message.reply('❌ Došlo je do greške pri provjeri pinga.');
         }
     }
 };
