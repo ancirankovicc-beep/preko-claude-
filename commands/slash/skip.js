@@ -6,13 +6,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('skip')
-        .setDescription('Skip the current song'),
+        .setDescription('Preskoči trenutnu pjesmu'),
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -40,17 +40,16 @@ module.exports = {
             }
 
             const player = conditions.player;
-            const currentTrack = player.current?.info?.title || 'Unknown';
-
+            const currentTrack = player.current?.info?.title || 'Nepoznato';
             player.stop();
 
-            const embed = new EmbedBuilder().setDescription(`⏭️ Skipped: **${currentTrack}**`);
+            const embed = new EmbedBuilder().setDescription(`⏭️ Preskočeno: **${currentTrack}**`);
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Skip command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while skipping the song!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri preskakanju pjesme!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }
