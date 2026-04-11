@@ -270,7 +270,7 @@ class StatusManager {
         this.stopCurrentStatus();
         this.isPlaying = false;
         
-        const defaultActivity = `🎵 Spreman za muziku!`;
+        const defaultActivity = `🎵 Playing Sexy Simulator!`;
         
         await this.client.user.setPresence({
             activities: [{
