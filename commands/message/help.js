@@ -8,13 +8,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     name: 'help',
     aliases: ['h'],
-    description: 'List all available commands',
+    description: 'Prikaži sve dostupne komande',
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -27,7 +27,7 @@ module.exports = {
             const msgFiles = fs.readdirSync(msgCommandsPath).filter(file => file.endsWith('.js'));
             const messageCommands = msgFiles.map(file => {
                 const cmd = require(path.join(msgCommandsPath, file));
-                return { name: cmd.name || 'Unknown', description: cmd.description || 'No description' };
+                return { name: cmd.name || 'Nepoznato', description: cmd.description || 'Nema opisa' };
             });
 
             const slashCommandsPath = path.join(__dirname, '..', 'slash');
@@ -35,19 +35,19 @@ module.exports = {
             const slashCommands = slashFiles.map(file => {
                 const cmd = require(path.join(slashCommandsPath, file));
                 return {
-                    name: cmd.data?.name || 'Unknown',
-                    description: cmd.data?.description || 'No description'
+                    name: cmd.data?.name || 'Nepoznato',
+                    description: cmd.data?.description || 'Nema opisa'
                 };
             });
 
-            let description = `**🌐 Bot Stats:** Serving in **${client.guilds.cache.size}** servers.\n\n`;
+            let description = `**🌐 Statistike bota:** Aktivan na **${client.guilds.cache.size}** servera.\n\n`;
 
-            description += `**💬 Message Commands [${messageCommands.length}]:**\n`;
+            description += `**💬 Komande porukama [${messageCommands.length}]:**\n`;
             messageCommands.forEach(cmd => {
                 description += `- \`!${cmd.name}\` - ${cmd.description}\n`;
             });
 
-            description += `\n**⚡ Slash Commands [${slashCommands.length}]:**\n`;
+            description += `\n**⚡ Slash komande [${slashCommands.length}]:**\n`;
             slashCommands.forEach(cmd => {
                 description += `- \`/${cmd.name}\` - ${cmd.description}\n`;
             });
@@ -57,17 +57,17 @@ module.exports = {
             }
 
             const embed = new EmbedBuilder()
-                .setTitle('📖 Ultimate Music Bot - Command List')
+                .setTitle('📖 Ultimate Music Bot - Lista komandi')
                 .setColor(0x1DB954)
                 .setDescription(description)
-                .setFooter({ text: 'Developed by GlaceYT | https://glaceyt.com' })
+                .setFooter({ text: 'Razvio GlaceYT | https://glaceyt.com' })
                 .setTimestamp();
 
             await message.reply({ embeds: [embed] });
 
         } catch (error) {
             console.error('Help command error:', error);
-            await message.reply('❌ An error occurred while fetching commands.');
+            await message.reply('❌ Došlo je do greške pri dohvatanju komandi.');
         }
     }
 };
