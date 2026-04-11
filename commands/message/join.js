@@ -6,13 +6,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     name: 'join',
     aliases: ['connect', 'summon'],
-    description: 'Join your voice channel',
+    description: 'Pridruži se tvom glasovnom kanalu',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -35,19 +35,19 @@ module.exports = {
             );
 
             if (!conditions.userInVoice) {
-                const embed = new EmbedBuilder().setDescription('❌ You need to be in a voice channel!');
+                const embed = new EmbedBuilder().setDescription('❌ Morate biti u glasovnom kanalu!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (!conditions.canJoinVoice) {
-                const embed = new EmbedBuilder().setDescription('❌ I don\'t have permission to join your voice channel!');
+                const embed = new EmbedBuilder().setDescription('❌ Nemam dozvolu da se pridružim vašem glasovnom kanalu!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (conditions.hasActivePlayer && conditions.sameVoiceChannel) {
-                const embed = new EmbedBuilder().setDescription('✅ I\'m already in your voice channel!');
+                const embed = new EmbedBuilder().setDescription('✅ Već sam u vašem glasovnom kanalu!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -61,13 +61,13 @@ module.exports = {
                 message.channel.id
             );
 
-            const embed = new EmbedBuilder().setDescription(`✅ Joined **${message.member.voice.channel.name}**!`);
+            const embed = new EmbedBuilder().setDescription(`✅ Pridružen u **${message.member.voice.channel.name}**!`);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Join command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while joining voice channel!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri pridruživanju glasovnom kanalu!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
