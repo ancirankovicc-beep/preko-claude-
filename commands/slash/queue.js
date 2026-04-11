@@ -6,10 +6,10 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('queue')
-        .setDescription('Show the music queue')
+        .setDescription('Prikaži red čekanja')
         .addIntegerOption(option =>
             option.setName('page')
-                .setDescription('Queue page number')
+                .setDescription('Broj stranice reda čekanja')
                 .setMinValue(1)
                 .setRequired(false)
         ),
@@ -18,7 +18,7 @@ module.exports = {
     async execute(interaction, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return interaction.reply({ embeds: [embed], ephemeral: true }).catch(() => {});
         }
@@ -39,7 +39,7 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno ne svira nikakva muzika!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -49,7 +49,7 @@ module.exports = {
             const currentTrack = player.current;
 
             if (!currentTrack && queue.size === 0) {
-                const embed = new EmbedBuilder().setDescription('📜 Queue is empty!');
+                const embed = new EmbedBuilder().setDescription('📜 Red čekanja je prazan!');
                 return interaction.editReply({ embeds: [embed] })
                     .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
             }
@@ -57,31 +57,30 @@ module.exports = {
             const page = interaction.options.getInteger('page') || 1;
             const songsPerPage = 15;
             const startIndex = (page - 1) * songsPerPage;
-            const endIndex = startIndex + songsPerPage;
             const totalPages = Math.ceil(queue.size / songsPerPage);
 
             let description = '';
 
             if (currentTrack) {
                 const duration = formatDuration(currentTrack.info.length);
-                description += `🎵 **Now Playing**\n**${currentTrack.info.title}**\nBy: ${currentTrack.info.author}\nDuration: ${duration}\nRequested by: <@${currentTrack.info.requester.id}>\n\n`;
+                description += `🎵 **Trenutno svira**\n**${currentTrack.info.title}**\nIzvođač: ${currentTrack.info.author}\nTrajanje: ${duration}\nZatražio: <@${currentTrack.info.requester.id}>\n\n`;
             }
 
             if (queue.size > 0) {
-                const queueTracks = Array.from(queue).slice(startIndex, endIndex);
+                const queueTracks = Array.from(queue).slice(startIndex, startIndex + songsPerPage);
                 if (queueTracks.length > 0) {
-                    description += `📋 **Up Next (${queue.size} songs)**\n`;
+                    description += `📋 **Sljedeće (${queue.size} pjesama)**\n`;
                     description += queueTracks.map((track, index) => {
                         const position = startIndex + index + 1;
                         const duration = formatDuration(track.info.length);
-                        return `\`${position}.\` **${track.info.title}** \`[${duration}]\`\nRequested by: <@${track.info.requester.id}>`;
+                        return `\`${position}.\` **${track.info.title}** \`[${duration}]\`\nZatražio: <@${track.info.requester.id}>`;
                     }).join('\n\n');
                 }
 
                 if (totalPages > 1) {
-                    description += `\n\nPage ${page}/${totalPages}`;
+                    description += `\n\nStranica ${page}/${totalPages}`;
                 } else {
-                    description += `\n\nTotal: ${queue.size} songs in queue`;
+                    description += `\n\nUkupno: ${queue.size} pjesama u redu čekanja`;
                 }
             }
 
@@ -91,7 +90,7 @@ module.exports = {
 
         } catch (error) {
             console.error('Queue command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while fetching the queue!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri dohvatanju reda čekanja!');
             return interaction.editReply({ embeds: [embed] })
                 .then(() => setTimeout(() => interaction.deleteReply().catch(() => {}), 3000));
         }
