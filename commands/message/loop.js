@@ -6,13 +6,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     name: 'loop',
     aliases: ['repeat', 'l'],
-    description: 'Set loop mode (off, track, queue)',
+    description: 'Postavi mod ponavljanja (isključeno, pjesma, red)',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -28,7 +28,7 @@ module.exports = {
         const validModes = ['off', 'none', 'track', 'song', 'queue', 'all'];
         
         if (!mode || !validModes.includes(mode)) {
-            const embed = new EmbedBuilder().setDescription('❌ Please specify a valid loop mode!\n**Options:** `off`, `track`, `queue`\nExample: `!loop track`');
+            const embed = new EmbedBuilder().setDescription('❌ Molimo odaberite validan mod ponavljanja!\n**Opcije:** `off`, `track`, `queue`\nPrimjer: `!loop track`');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
@@ -44,13 +44,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno ne svira nikakva muzika!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (!conditions.sameVoiceChannel) {
-                const embed = new EmbedBuilder().setDescription('❌ You need to be in the same voice channel as the bot!');
+                const embed = new EmbedBuilder().setDescription('❌ Morate biti u istom glasovnom kanalu kao bot!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -64,15 +64,15 @@ module.exports = {
             player.setLoop(loopMode);
 
             const modeEmojis = { none: '➡️', track: '🔂', queue: '🔁' };
-            const modeNames = { none: 'Off', track: 'Track', queue: 'Queue' };
+            const modeNames = { none: 'Isključeno', track: 'Pjesma', queue: 'Red čekanja' };
 
-            const embed = new EmbedBuilder().setDescription(`${modeEmojis[loopMode]} Loop mode set to: **${modeNames[loopMode]}**`);
+            const embed = new EmbedBuilder().setDescription(`${modeEmojis[loopMode]} Mod ponavljanja postavljen na: **${modeNames[loopMode]}**`);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Loop command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while setting loop mode!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri postavljanju moda ponavljanja!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
