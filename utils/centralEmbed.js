@@ -25,51 +25,51 @@ class CentralEmbedHandler {
             const channel = await this.client.channels.fetch(channelId);
             
             const embed = new EmbedBuilder()
-            .setAuthor({ name: 'Ultimate Music Control Center', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
+            .setAuthor({ name: 'Ultimativni Muzički Kontrolni Centar', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
                 .setDescription([
                     '',
-                    '- Simply type a **song name** or **YouTube link** to start the party!',
-                    '- In free version I only support **YouTube** only.',
+                    '- Jednostavno **napiši naziv pjesme** ili **YouTube link** da započneš zabavu!',
+                    '- U besplatnoj verziji podržavam samo **YouTube**.',
                     '',
-                    '✨ *Ready to fill this place with amazing music?*'
+                    '✨ *Spreman da napuniš ovo mjesto odličnom muzikom?*'
                 ].join('\n'))
                 .setColor(0x9966ff) 
                 .addFields(
                     {
-                        name: '🎯 Quick Examples',
+                        name: '🎯 Brzi Primjeri',
                         value: [
                             '• `shape of you`',
-                            '• `lofi hip hop beats`',
+                            '• `lofi hip hop beatovi`',
                             '• `https://youtu.be/dQw4w9WgXcQ`',
                             '• `imagine dragons believer`'
                         ].join('\n'),
                         inline: true
                     },
                     {
-                        name: '🚀 Features',
+                        name: '🚀 Mogućnosti',
                         value: [
-                            '• 🎵 High quality audio',
-                            '• 📜 Queue management', 
-                            '• 🔁 Loop & shuffle modes',
-                            '• 🎛️ Volume controls',
-                            '• ⚡ Lightning fast search'
+                            '• 🎵 Visokokvalitetni zvuk',
+                            '• 📜 Upravljanje redoslijedom',
+                            '• 🔁 Režimi ponavljanja i miješanja',
+                            '• 🎛️ Kontrola jačine zvuka',
+                            '• ⚡ Blesavo brza pretraga'
                         ].join('\n'),
                         inline: true
                     },
                     {
-                        name: '💡 Pro Tips',
+                        name: '💡 Pro Savjeti',
                         value: [
-                            '• Join voice channel first',
-                            '• Use specific song names',
-                            '• Try artist + song combo',
-                            '• Playlists are supported!'
+                            '• Prvo uđi u glasovni kanal',
+                            '• Koristi tačne nazive pjesama',
+                            '• Probaj kombinaciju izvođač + pjesma',
+                            '• Liste pjesama su podržane!'
                         ].join('\n'),
                         inline: false
                     }
                 )
                 .setImage('https://i.ibb.co/DDSdKy31/ezgif-8aec7517f2146d.gif')
                 .setFooter({ 
-                    text: 'Ultimate Music Bot • Developed By GlaceYT!',
+                    text: 'Ultimativni Muzički Bot • Autor: GlaceYT!',
                     iconURL: this.client.user.displayAvatarURL()
                 })
                 .setTimestamp();
@@ -81,10 +81,10 @@ class CentralEmbedHandler {
                 'centralSetup.channelId': channelId
             });
 
-            console.log(`✅ Central embed created in ${guildId}`);
+            console.log(`✅ Centralni embed kreiran u ${guildId}`);
             return message;
         } catch (error) {
-            console.error('Error creating central embed:', error);
+            console.error('Greška pri kreiranju centralnog embeda:', error);
             return null;
         }
     }
@@ -103,7 +103,7 @@ class CentralEmbedHandler {
                 try {
                     const guild = this.client.guilds.cache.get(serverConfig._id);
                     if (!guild) {
-                        console.log(`⚠️ Bot no longer in guild ${serverConfig._id}, cleaning up database...`);
+                        console.log(`⚠️ Bot više nije u serveru ${serverConfig._id}, čistim bazu podataka...`);
                         await Server.findByIdAndUpdate(serverConfig._id, {
                             'centralSetup.enabled': false,
                             'centralSetup.embedId': null
@@ -113,7 +113,7 @@ class CentralEmbedHandler {
 
                     const channel = await this.client.channels.fetch(serverConfig.centralSetup.channelId).catch(() => null);
                     if (!channel) {
-                        console.log(`⚠️ Central channel not found in ${guild.name}, cleaning up...`);
+                        console.log(`⚠️ Centralni kanal nije pronađen u ${guild.name}, čistim...`);
                         await Server.findByIdAndUpdate(serverConfig._id, {
                             'centralSetup.enabled': false,
                             'centralSetup.embedId': null
@@ -123,13 +123,13 @@ class CentralEmbedHandler {
 
                     const botMember = guild.members.me;
                     if (!channel.permissionsFor(botMember).has(['SendMessages', 'EmbedLinks'])) {
-                        console.log(`⚠️ Missing permissions in ${guild.name}, skipping...`);
+                        console.log(`⚠️ Nemam dozvole u ${guild.name}, preskačem...`);
                         continue;
                     }
 
                     const message = await channel.messages.fetch(serverConfig.centralSetup.embedId).catch(() => null);
                     if (!message) {
-                        console.log(`⚠️ Central embed not found in ${guild.name}, creating new one...`);
+                        console.log(`⚠️ Centralni embed nije pronađen u ${guild.name}, kreiram novi...`);
                         const newMessage = await this.createCentralEmbed(channel.id, guild.id);
                         if (newMessage) {
                             resetCount++;
@@ -154,7 +154,7 @@ class CentralEmbedHandler {
             }
 
         } catch (error) {
-            console.error('❌ Error during central embed auto-reset:', error);
+            console.error('❌ Greška pri automatskom resetovanju centralnog embeda:', error);
         }
     }
 
@@ -170,7 +170,7 @@ class CentralEmbedHandler {
             
             if (trackInfo) {
                 const statusEmoji = trackInfo.paused ? '⏸️' : '▶️';
-                const statusText = trackInfo.paused ? 'Paused' : 'Now Playing';
+                const statusText = trackInfo.paused ? 'Pauzirano' : 'Trenutno svira';
                 const loopEmoji = this.getLoopEmoji(trackInfo.loop);
                 const embedColor = trackInfo.paused ? 0xFFA500 : 0x9966ff;
                 
@@ -183,23 +183,22 @@ class CentralEmbedHandler {
                         url: 'https://discord.gg/xQF9f9yUEM' 
                     })
                     .setDescription([
-                        `**🎤 Artist:** ${trackInfo.author}`,
-                        `**👤 Requested by:** <@${trackInfo.requester.id}>`,
+                        `**🎤 Izvođač:** ${trackInfo.author}`,
+                        `**👤 Zatražio/la:** <@${trackInfo.requester.id}>`,
                         '',
-                        `⏰ **Duration:** \`${this.formatDuration(trackInfo.duration)}\``,
-                        `${loopEmoji} **Loop:** \`${trackInfo.loop || 'Off'}\``,
-                        `🔊 **Volume:** \`${trackInfo.volume || 50}%\``,
+                        `⏰ **Trajanje:** \`${this.formatDuration(trackInfo.duration)}\``,
+                        `${loopEmoji} **Ponavljanje:** \`${trackInfo.loop === 'track' ? 'Pjesma' : trackInfo.loop === 'queue' ? 'Redoslijed' : 'Isključeno'}\``,
+                        `🔊 **Jačina zvuka:** \`${trackInfo.volume || 50}%\``,
                         '',
-                        '🎶 *Enjoying the vibes? Type more song names below to keep the party going!*'
+                        '🎶 *Sviđa ti se? Napiši naziv pjesme ispod za još muzike!*'
                     ].join('\n'))
                     .setColor(embedColor)
                     .setFooter({ 
-                        text: `Ultimate Music Bot • ${statusText} • Developed By GlaceYT`,
+                        text: `Ultimativni Muzički Bot • ${statusText} • Autor: GlaceYT`,
                         iconURL: this.client.user.displayAvatarURL()
                     })
                     .setTimestamp();
 
-                // Only set thumbnail if we have a valid URL
                 if (validThumbnail) {
                     embed.setThumbnail(validThumbnail);
                 }
@@ -213,51 +212,51 @@ class CentralEmbedHandler {
             } else {
                
                 embed = new EmbedBuilder()
-                .setAuthor({ name: 'Ultimate Music Control Center', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
+                .setAuthor({ name: 'Ultimativni Muzički Kontrolni Centar', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
                 .setDescription([
                     '',
-                    '- Simply type a **song name** or **YouTube link** to start the party!',
-                    '- In free version I only support **YouTube** only.',
+                    '- Jednostavno **napiši naziv pjesme** ili **YouTube link** da započneš zabavu!',
+                    '- U besplatnoj verziji podržavam samo **YouTube**.',
                     '',
-                    '✨ *Ready to fill this place with amazing music?*'
+                    '✨ *Spreman da napuniš ovo mjesto odličnom muzikom?*'
                 ].join('\n'))
                 .setColor(0x9966ff) 
                 .addFields(
                     {
-                        name: '🎯 Quick Examples',
+                        name: '🎯 Brzi Primjeri',
                         value: [
                             '• `shape of you`',
-                            '• `lofi hip hop beats`',
+                            '• `lofi hip hop beatovi`',
                             '• `https://youtu.be/dQw4w9WgXcQ`',
                             '• `imagine dragons believer`'
                         ].join('\n'),
                         inline: true
                     },
                     {
-                        name: '🚀 Features',
+                        name: '🚀 Mogućnosti',
                         value: [
-                            '• 🎵 High quality audio',
-                            '• 📜 Queue management', 
-                            '• 🔁 Loop & shuffle modes',
-                            '• 🎛️ Volume controls',
-                            '• ⚡ Lightning fast search'
+                            '• 🎵 Visokokvalitetni zvuk',
+                            '• 📜 Upravljanje redoslijedom',
+                            '• 🔁 Režimi ponavljanja i miješanja',
+                            '• 🎛️ Kontrola jačine zvuka',
+                            '• ⚡ Blesavo brza pretraga'
                         ].join('\n'),
                         inline: true
                     },
                     {
-                        name: '💡 Pro Tips',
+                        name: '💡 Pro Savjeti',
                         value: [
-                            '• Join voice channel first',
-                            '• Use specific song names',
-                            '• Try artist + song combo',
-                            '• Playlists are supported!'
+                            '• Prvo uđi u glasovni kanal',
+                            '• Koristi tačne nazive pjesama',
+                            '• Probaj kombinaciju izvođač + pjesma',
+                            '• Liste pjesama su podržane!'
                         ].join('\n'),
                         inline: false
                     }
                 )
                 .setImage('https://i.ibb.co/DDSdKy31/ezgif-8aec7517f2146d.gif')
                 .setFooter({ 
-                    text: 'Ultimate Music Bot • Developed By GlaceYT!',
+                    text: 'Stevina Anci • Autor: Steva!',
                     iconURL: this.client.user.displayAvatarURL()
                 })
                 .setTimestamp();
@@ -268,7 +267,7 @@ class CentralEmbedHandler {
             await message.edit({ embeds: [embed], components });
 
         } catch (error) {
-            console.error('Error updating central embed:', error);
+            console.error('Greška pri ažuriranju centralnog embeda:', error);
         }
     }
 
@@ -298,7 +297,7 @@ class CentralEmbedHandler {
                     .setStyle(ButtonStyle.Success),
                     
                 new ButtonBuilder()
-                    .setLabel('\u200B\u200BLoop\u200B')
+                    .setLabel('\u200B\u200BPonovi\u200B')
                     .setCustomId('music_loop')
                     .setEmoji(this.getLoopEmoji(trackInfo.loop))
                     .setStyle(ButtonStyle.Primary)
@@ -327,7 +326,7 @@ class CentralEmbedHandler {
                     .setStyle(ButtonStyle.Secondary),
                     
                 new ButtonBuilder()
-                    .setLabel('Support')
+                    .setLabel('Podrška')
                     .setStyle(ButtonStyle.Link)
                     .setURL(config.bot.supportServer)
             );
