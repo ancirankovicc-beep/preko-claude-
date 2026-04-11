@@ -6,13 +6,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     name: 'play',
     aliases: ['p', 'music', 'song', 'add'],
-    description: 'Play a song or add to queue',
+    description: 'Pusti pjesmu ili dodaj u red čekanja',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -30,7 +30,7 @@ module.exports = {
         
         const query = args.join(' ');
         if (!query) {
-            const embed = new EmbedBuilder().setDescription('❌ Please provide a song to play!');
+            const embed = new EmbedBuilder().setDescription('❌ Molimo unesite naziv pjesme!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
@@ -66,21 +66,21 @@ module.exports = {
             const result = await playerHandler.playSong(player, query, message.author);
 
             if (result.type === 'track') {
-                const embed = new EmbedBuilder().setDescription(`✅ Added to queue: **${result.track.info.title}**`);
+                const embed = new EmbedBuilder().setDescription(`✅ Dodato u red čekanja: **${result.track.info.title}**`);
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             } else if (result.type === 'playlist') {
-                const embed = new EmbedBuilder().setDescription(`✅ Added **${result.tracks}** songs from playlist: **${result.name}**`);
+                const embed = new EmbedBuilder().setDescription(`✅ Dodato **${result.tracks}** pjesama iz plejliste: **${result.name}**`);
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             } else {
-                const embed = new EmbedBuilder().setDescription('❌ No results found for your query!');
+                const embed = new EmbedBuilder().setDescription('❌ Nema rezultata za vaš upit!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
         } catch (error) {
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while trying to play music!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri pokušaju puštanja muzike!');
             console.error('Play command error:', error);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
