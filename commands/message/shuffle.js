@@ -6,13 +6,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     name: 'shuffle',
     aliases: ['mix', 'randomize', 'sh'],
-    description: 'Shuffle the queue',
+    description: 'Izmiješaj red čekanja',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -35,13 +35,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer || conditions.queueLength === 0) {
-                const embed = new EmbedBuilder().setDescription('❌ Queue is empty, nothing to shuffle!');
+                const embed = new EmbedBuilder().setDescription('❌ Red čekanja je prazan, nema šta da se izmiješa!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (!conditions.sameVoiceChannel) {
-                const embed = new EmbedBuilder().setDescription('❌ You need to be in the same voice channel as the bot!');
+                const embed = new EmbedBuilder().setDescription('❌ Morate biti u istom glasovnom kanalu kao bot!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -49,13 +49,13 @@ module.exports = {
             const player = conditions.player;
             player.queue.shuffle();
 
-            const embed = new EmbedBuilder().setDescription(`🔀 Shuffled **${conditions.queueLength}** songs in queue!`);
+            const embed = new EmbedBuilder().setDescription(`🔀 Izmiješano **${conditions.queueLength}** pjesama u redu čekanja!`);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Shuffle command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while shuffling the queue!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri miješanju reda čekanja!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
