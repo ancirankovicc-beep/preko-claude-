@@ -24,7 +24,7 @@ class StatusManager {
                 await this.clearVoiceChannelStatus(guildId);
             }
         } catch (error) {
-            console.error('❌ Error updating status and voice channel:', error);
+            console.error('❌ Greška pri ažuriranju statusa i glasovnog kanala:', error);
         }
     }
 
@@ -53,11 +53,11 @@ class StatusManager {
                     }],
                     status: 'online'
                 });
-                console.log(`🔄 Status refreshed: ${activity}`);
+                console.log(`🔄 Status osvježen: ${activity}`);
             }
         }, 30000);
         
-        console.log(`✅ Status locked to: ${activity}`);
+        console.log(`✅ Status zaključan na: ${activity}`);
     }
 
 
@@ -85,7 +85,7 @@ class StatusManager {
             const permissions = voiceChannel.permissionsFor(botMember);
             
             if (!permissions?.has('ManageChannels')) {
-                console.warn(`⚠️ Bot lacks 'Manage Channels' permission in ${voiceChannel.name}`);
+                console.warn(`⚠️ Bot nema dozvolu 'Upravljanje kanalima' u ${voiceChannel.name}`);
                 return;
             }
 
@@ -101,7 +101,7 @@ class StatusManager {
             await this.createChannelName(voiceChannel, trackTitle);
 
         } catch (error) {
-            console.error(`❌ Voice channel status creation failed: ${error.message}`);
+            console.error(`❌ Kreiranje statusa u glasovnom kanalu nije uspjelo: ${error.message}`);
         }
     }
 
@@ -129,7 +129,7 @@ class StatusManager {
  
             if (!voiceChannel) {
                 for (const channel of guild.channels.cache.values()) {
-                    if (channel.type === 2 && this.voiceChannelData.has(channel.id)) { // Voice channel
+                    if (channel.type === 2 && this.voiceChannelData.has(channel.id)) {
                         voiceChannel = channel;
                         break;
                     }
@@ -141,7 +141,7 @@ class StatusManager {
     
             const permissions = voiceChannel.permissionsFor(botMember);
             if (!permissions?.has('ManageChannels')) {
-                console.warn(`⚠️ Bot lacks 'Manage Channels' permission in ${voiceChannel.name}`);
+                console.warn(`⚠️ Bot nema dozvolu 'Upravljanje kanalima' u ${voiceChannel.name}`);
                 return;
             }
 
@@ -155,7 +155,7 @@ class StatusManager {
             await this.deleteChannelName(voiceChannel);
 
         } catch (error) {
-            console.error(`❌ Voice channel status clearing failed: ${error.message}`);
+            console.error(`❌ Brisanje statusa iz glasovnog kanala nije uspjelo: ${error.message}`);
         }
     }
 
@@ -165,10 +165,10 @@ class StatusManager {
             await this.client.rest.put(`/channels/${channelId}/voice-status`, {
                 body: { status: statusText }
             });
-            console.log(`✅ Voice status created: ${statusText}`);
+            console.log(`✅ Status glasa kreiran: ${statusText}`);
             return true;
         } catch (error) {
-            console.log(`ℹ️ Voice status API not available for creation`);
+            console.log(`ℹ️ API za status glasa nije dostupan za kreiranje`);
             return false;
         }
     }
@@ -180,16 +180,16 @@ class StatusManager {
             await this.client.rest.put(`/channels/${channelId}/voice-status`, {
                 body: { status: null }
             });
-            console.log(`✅ Voice status cleared`);
+            console.log(`✅ Status glasa obrisan`);
             return true;
         } catch (error) {
             try {
              
                 await this.client.rest.delete(`/channels/${channelId}/voice-status`);
-                console.log(`✅ Voice status deleted`);
+                console.log(`✅ Status glasa izbrisan`);
                 return true;
             } catch (deleteError) {
-                console.log(`ℹ️ Voice status API not available for deletion`);
+                console.log(`ℹ️ API za status glasa nije dostupan za brisanje`);
                 return false;
             }
         }
@@ -198,12 +198,12 @@ class StatusManager {
 
     async createChannelTopic(voiceChannel, trackTitle) {
         try {
-            const topicText = `🎵 Now Playing: ${trackTitle}`;
+            const topicText = `🎵 Trenutno svira: ${trackTitle}`;
             await voiceChannel.setTopic(topicText);
-            console.log(`✅ Voice channel topic created: ${topicText}`);
+            console.log(`✅ Tema glasovnog kanala kreirana: ${topicText}`);
             return true;
         } catch (error) {
-            console.log(`ℹ️ Channel topic creation failed: ${error.message}`);
+            console.log(`ℹ️ Kreiranje teme kanala nije uspjelo: ${error.message}`);
             return false;
         }
     }
@@ -215,10 +215,10 @@ class StatusManager {
             const originalTopic = originalData?.originalTopic || null;
             
             await voiceChannel.setTopic(originalTopic);
-            console.log(`✅ Voice channel topic restored`);
+            console.log(`✅ Tema glasovnog kanala vraćena`);
             return true;
         } catch (error) {
-            console.log(`ℹ️ Channel topic restoration failed: ${error.message}`);
+            console.log(`ℹ️ Vraćanje teme kanala nije uspjelo: ${error.message}`);
             return false;
         }
     }
@@ -236,11 +236,11 @@ class StatusManager {
 
             if (newName !== voiceChannel.name && newName.length <= 100) {
                 await voiceChannel.setName(newName);
-                console.log(`✅ Voice channel name created: ${newName}`);
+                console.log(`✅ Ime glasovnog kanala kreirano: ${newName}`);
             }
             return true;
         } catch (error) {
-            console.warn(`⚠️ Channel name creation failed: ${error.message}`);
+            console.warn(`⚠️ Kreiranje imena kanala nije uspjelo: ${error.message}`);
             return false;
         }
     }
@@ -253,14 +253,14 @@ class StatusManager {
             
             if (originalName && originalName !== voiceChannel.name) {
                 await voiceChannel.setName(originalName);
-                console.log(`✅ Voice channel name restored: ${originalName}`);
+                console.log(`✅ Ime glasovnog kanala vraćeno: ${originalName}`);
                 
          
                 this.voiceChannelData.delete(voiceChannel.id);
             }
             return true;
         } catch (error) {
-            console.warn(`⚠️ Channel name restoration failed: ${error.message}`);
+            console.warn(`⚠️ Vraćanje imena kanala nije uspjelo: ${error.message}`);
             return false;
         }
     }
@@ -270,7 +270,7 @@ class StatusManager {
         this.stopCurrentStatus();
         this.isPlaying = false;
         
-        const defaultActivity = `🎵 Ready for music!`;
+        const defaultActivity = `🎵 Spreman za muziku!`;
         
         await this.client.user.setPresence({
             activities: [{
@@ -280,7 +280,7 @@ class StatusManager {
             status: 'online'
         });
         
-        console.log(`✅ Status reset to: ${defaultActivity}`);
+        console.log(`✅ Status resetovan na: ${defaultActivity}`);
     }
 
   
@@ -296,12 +296,11 @@ class StatusManager {
         if (!this.isPlaying) {
             await this.client.user.setPresence({
                 activities: [{
-                    name: `🎸 Music in ${serverCount} servers`,
+                    name: `🎸 Muzika na ${serverCount} servera`,
                     type: ActivityType.Playing
                 }],
                 status: 'online'
             });
-            //console.log(`✅ Server count status set: ${serverCount} servers`);
         }
     }
 
@@ -333,14 +332,14 @@ class StatusManager {
     }
 
 
-    async testVoiceChannelCRUD(guildId, testText = 'Test Song') {
-        console.log(`🧪 Testing Voice Channel CRUD for guild ${guildId}`);
+    async testVoiceChannelCRUD(guildId, testText = 'Test Pjesma') {
+        console.log(`🧪 Testiranje CRUD operacija glasovnog kanala za server ${guildId}`);
         
         const results = [];
         
    
         await this.setVoiceChannelStatus(guildId, testText);
-        results.push('✅ CREATE: Status set');
+        results.push('✅ KREIRANJE: Status postavljen');
         
         await new Promise(resolve => setTimeout(resolve, 3000)); 
         
@@ -350,8 +349,8 @@ class StatusManager {
             const guild = this.client.guilds.cache.get(guildId);
             const voiceChannel = guild?.channels.cache.get(player.voiceChannel);
             if (voiceChannel) {
-                results.push(`📖 READ: Channel name: ${voiceChannel.name}`);
-                results.push(`📖 READ: Channel topic: ${voiceChannel.topic || 'None'}`);
+                results.push(`📖 ČITANJE: Ime kanala: ${voiceChannel.name}`);
+                results.push(`📖 ČITANJE: Tema kanala: ${voiceChannel.topic || 'Nema'}`);
             }
         }
         
@@ -359,7 +358,7 @@ class StatusManager {
         
   
         await this.clearVoiceChannelStatus(guildId);
-        results.push('🗑️ DELETE: Status cleared');
+        results.push('🗑️ BRISANJE: Status obrisan');
         
         return results.join('\n');
     }
