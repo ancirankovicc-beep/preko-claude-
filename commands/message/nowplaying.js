@@ -6,13 +6,13 @@ const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 module.exports = {
     name: 'nowplaying',
     aliases: ['np', 'current', 'playing', 'now'],
-    description: 'Show current playing song',
+    description: 'Prikaži trenutnu pjesmu',
     securityToken: COMMAND_SECURITY_TOKEN,
     
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -35,7 +35,7 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer || !conditions.currentTrack) {
-                const embed = new EmbedBuilder().setDescription('❌ No music is currently playing!');
+                const embed = new EmbedBuilder().setDescription('❌ Trenutno ne svira nikakva muzika!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -50,12 +50,12 @@ module.exports = {
 
             const embed = new EmbedBuilder().setDescription(
                 `${statusEmoji} **${track.info.title}**\n` +
-                `By: ${track.info.author}\n` +
+                `Izvođač: ${track.info.author}\n` +
                 `⏰ ${position} / ${duration}\n` +
                 `👤 <@${track.info.requester.id}>\n` +
-                `🔊 Volume: ${player.volume || 50}%\n` +
-                `🔁 Loop: ${loopEmoji} ${player.loop || 'Off'}\n` +
-                `📜 Queue: ${player.queue.size} songs`
+                `🔊 Jačina zvuka: ${player.volume || 50}%\n` +
+                `🔁 Ponavljanje: ${loopEmoji} ${player.loop || 'Isključeno'}\n` +
+                `📜 Red čekanja: ${player.queue.size} pjesama`
             );
 
             return message.reply({ embeds: [embed] })
@@ -63,7 +63,7 @@ module.exports = {
 
         } catch (error) {
             console.error('Now playing command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while fetching current song!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri dohvatanju trenutne pjesme!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
