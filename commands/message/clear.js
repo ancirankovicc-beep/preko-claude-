@@ -1,19 +1,18 @@
 const { EmbedBuilder } = require('discord.js');
 const shiva = require('../../shiva');
 
-
 const COMMAND_SECURITY_TOKEN = shiva.SECURITY_TOKEN;
 
 module.exports = {
     name: 'clear',
     aliases: ['empty', 'clean', 'clearqueue'],
-    description: 'Clear all songs from queue',
+    description: 'Obriši sve pjesme iz reda čekanja',
     securityToken: COMMAND_SECURITY_TOKEN,
 
     async execute(message, args, client) {
         if (!shiva || !shiva.validateCore || !shiva.validateCore()) {
             const embed = new EmbedBuilder()
-                .setDescription('❌ System core offline - Command unavailable')
+                .setDescription('❌ Sistemsko jezgro je offline - Komanda nedostupna')
                 .setColor('#FF0000');
             return message.reply({ embeds: [embed] }).catch(() => {});
         }
@@ -36,13 +35,13 @@ module.exports = {
             );
 
             if (!conditions.hasActivePlayer || conditions.queueLength === 0) {
-                const embed = new EmbedBuilder().setDescription('❌ Queue is empty!');
+                const embed = new EmbedBuilder().setDescription('❌ Red čekanja je prazan!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
 
             if (!conditions.sameVoiceChannel) {
-                const embed = new EmbedBuilder().setDescription('❌ You need to be in the same voice channel as the bot!');
+                const embed = new EmbedBuilder().setDescription('❌ Morate biti u istom glasovnom kanalu kao bot!');
                 return message.reply({ embeds: [embed] })
                     .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
             }
@@ -51,13 +50,13 @@ module.exports = {
             const clearedCount = player.queue.size;
             player.queue.clear();
 
-            const embed = new EmbedBuilder().setDescription(`🗑️ Cleared **${clearedCount}** songs from queue!`);
+            const embed = new EmbedBuilder().setDescription(`🗑️ Obrisano **${clearedCount}** pjesama iz reda čekanja!`);
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
 
         } catch (error) {
             console.error('Clear command error:', error);
-            const embed = new EmbedBuilder().setDescription('❌ An error occurred while clearing queue!');
+            const embed = new EmbedBuilder().setDescription('❌ Došlo je do greške pri brisanju reda čekanja!');
             return message.reply({ embeds: [embed] })
                 .then(m => setTimeout(() => m.delete().catch(() => {}), 3000));
         }
