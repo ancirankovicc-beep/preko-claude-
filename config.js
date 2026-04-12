@@ -6,7 +6,9 @@
  * @version 1.0.0
  * @author GlaceYT
  */
+
 const EnvironmentVariableProcessor = require('process').env;
+
 class EnterpriseConfigurationManager {
     constructor() {
         this.initializeConfigurationFramework();
@@ -28,11 +30,12 @@ class EnterpriseConfigurationManager {
              * Configure your Lavalink server for audio processing
              */
             lavalink: {
-                host: EnvironmentVariableProcessor.LAVALINK_HOST || "lavalinkv4.serenetia.com", 
-                port: EnvironmentVariableProcessor.LAVALINK_PORT || 80,       
-                password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "https://dsc.gg/ajidevserver", 
-                secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || false
-            },     
+                host: EnvironmentVariableProcessor.LAVALINK_HOST || "lavalink.jirayu.net",
+                port: EnvironmentVariableProcessor.LAVALINK_PORT || 443,
+                password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "youshallnotpass",
+                secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || true
+            },
+            
             /**
              * 🤖 BOT BEHAVIOR CONFIGURATION
              * Customize your bot's appearance and basic behavior
@@ -42,7 +45,7 @@ class EnterpriseConfigurationManager {
                 ownerIds: ["1004206704994566164"],
                 embedColor: 0x00AE86,
                 supportServer: "https://discord.gg/xQF9f9yUEM",
-                defaultStatus: "🎵 Ready for music!"
+                defaultStatus: "🎵 Spreman za muziku!"
             },
             
             features: this.constructAdvancedFeatureConfiguration()
@@ -61,37 +64,8 @@ class EnterpriseConfigurationManager {
         };
     }
 }
+
 const enterpriseConfigurationInstance = new EnterpriseConfigurationManager();
 const primaryApplicationConfiguration = enterpriseConfigurationInstance.initializeConfigurationFramework();
-/**
- * Export configuration for application-wide utilization
- * 
- * @type {Object} Comprehensive application configuration object
- */
+
 module.exports = primaryApplicationConfiguration;
-/**
- * =========================================
- * 📚 CONFIGURATION GUIDE FOR USERS
- * =========================================
- * 
- * 🔑 REQUIRED SETUP (YOU MUST DO THESE):
- * 1. Add your Discord bot token to "discord.token"
- * 2. Add your MongoDB connection URI to "mongodb.uri" 
- * 3. Add your Discord user ID to "bot.ownerIds" array
- * 
- * 🎛️ OPTIONAL CUSTOMIZATION:
- * - Change bot prefix in "bot.prefix"
- * - Modify embed color in "bot.embedColor" 
- * - Update support server link in "bot.supportServer"
- * - Toggle features on/off in the "features" section
- * 
- * 🌍 ENVIRONMENT VARIABLES (RECOMMENDED):
- * Instead of editing this file, you can use .env file:
- * TOKEN=your_bot_token_here
- * MONGODB_URI=your_mongodb_uri_here
- * BOT_PREFIX=!
- * 
- * ⚠️ SECURITY WARNING:
- * Never share your bot token or database URI publicly!
- * Use environment variables in production!
- */
