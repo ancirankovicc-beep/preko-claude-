@@ -30,11 +30,11 @@ class EnterpriseConfigurationManager {
              * Configure your Lavalink server for audio processing
              */
             lavalink: {
-                host: EnvironmentVariableProcessor.LAVALINK_HOST || "lavalink.jirayu.net",
-                port: EnvironmentVariableProcessor.LAVALINK_PORT || 443,
-                password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "youshallnotpass",
-                secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || true
-            },
+    host: EnvironmentVariableProcessor.LAVALINK_HOST || "lavalinkv4.serenetia.com",
+    port: EnvironmentVariableProcessor.LAVALINK_PORT || 80,
+    password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "https://dsc.gg/ajidevserver",
+    secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || false
+},,
             
             /**
              * 🤖 BOT BEHAVIOR CONFIGURATION
