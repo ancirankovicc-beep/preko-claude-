@@ -57,10 +57,10 @@ module.exports = {
             }
 
             const embed = new EmbedBuilder()
-                .setTitle('📖 Ultimate Music Bot - Lista komandi')
+                .setTitle('📖 Ancii Music Bot - Lista komandi')
                 .setColor(0x1DB954)
                 .setDescription(description)
-                .setFooter({ text: 'Razvio GlaceYT | https://glaceyt.com' })
+                .setFooter({ text: 'Razvio Steva Jajara | https://steavajajara.com' })
                 .setTimestamp();
 
             await message.reply({ embeds: [embed] });
