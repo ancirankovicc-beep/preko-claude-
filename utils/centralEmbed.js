@@ -69,7 +69,7 @@ class CentralEmbedHandler {
                 )
                 .setImage('https://i.ibb.co/DDSdKy31/ezgif-8aec7517f2146d.gif')
                 .setFooter({ 
-                    text: 'Ultimativni Muzički Bot • Autor: GlaceYT!',
+                    text: 'Muzički Bot • Autor: Steva!',
                     iconURL: this.client.user.displayAvatarURL()
                 })
                 .setTimestamp();
@@ -212,7 +212,7 @@ class CentralEmbedHandler {
             } else {
                
                 embed = new EmbedBuilder()
-                .setAuthor({ name: 'Ultimativni Muzički Kontrolni Centar', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
+                .setAuthor({ name: 'Muzički Kontrolni Centar', iconURL: 'https://cdn.discordapp.com/emojis/896724352949706762.gif', url: 'https://discord.gg/xQF9f9yUEM' })
                 .setDescription([
                     '',
                     '- Jednostavno **napiši naziv pjesme** ili **YouTube link** da započneš zabavu!',
