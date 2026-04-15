@@ -30,9 +30,9 @@ class EnterpriseConfigurationManager {
              * Configure your Lavalink server for audio processing
              */
          lavalink: {
-    host: EnvironmentVariableProcessor.LAVALINK_HOST || "us1.lavalink.creavite.co",
-    port: EnvironmentVariableProcessor.LAVALINK_PORT || 20080,
-    password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "auto.creavite.co",
+    host: EnvironmentVariableProcessor.LAVALINK_HOST || "de.kerit.cloud",
+    port: EnvironmentVariableProcessor.LAVALINK_PORT || 9363,
+    password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "8f2e0a763f9c5f45",
     secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || false
 },
             
