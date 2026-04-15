@@ -29,11 +29,11 @@ class EnterpriseConfigurationManager {
              * 🎵 LAVALINK AUDIO SERVER CONFIGURATION
              * Configure your Lavalink server for audio processing
              */
-            lavalink: {
-    host: EnvironmentVariableProcessor.LAVALINK_HOST || "lavalink.jirayu.net",
-    port: EnvironmentVariableProcessor.LAVALINK_PORT || 443,
-    password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "youshallnotpass",
-    secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || true
+         lavalink: {
+    host: EnvironmentVariableProcessor.LAVALINK_HOST || "us1.lavalink.creavite.co",
+    port: EnvironmentVariableProcessor.LAVALINK_PORT || 20080,
+    password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "auto.creavite.co",
+    secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || false
 },
             
             /**
