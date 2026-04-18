@@ -91,10 +91,8 @@ class PlayerHandler {
         }
     }
 
-
     async getThumbnailSafely(track) {
         try {
-        
             if (track.info.thumbnail instanceof Promise) {
                 const thumbnail = await Promise.race([
                     track.info.thumbnail,
@@ -103,19 +101,16 @@ class PlayerHandler {
                 return typeof thumbnail === 'string' ? thumbnail : null;
             }
             
-      
             if (typeof track.info.thumbnail === 'string' && track.info.thumbnail.trim() !== '') {
                 return track.info.thumbnail;
             }
             
-      
             if (track.info.identifier && track.info.sourceName === 'youtube') {
                 return `https://img.youtube.com/vi/${track.info.identifier}/maxresdefault.jpg`;
             }
             
             return null;
         } catch (error) {
-          
             if (track.info.identifier && track.info.sourceName === 'youtube') {
                 return `https://img.youtube.com/vi/${track.info.identifier}/maxresdefault.jpg`;
             }
@@ -131,7 +126,6 @@ class PlayerHandler {
                 return null;
             }
 
-      
             const thumbnail = await this.getThumbnailSafely(player.current);
 
             return {
@@ -154,149 +148,146 @@ class PlayerHandler {
     }
 
     initializeEvents() {
-    this.client.riffy.on('trackStart', async (player, track) => {
-        try {
-            const trackTitle = track?.info?.title || 'Unknown Track';
-            console.log(`🎵 Started playing: ${trackTitle} in ${player.guildId}`);
-            
-            if (this.client.statusManager) {
-                await this.client.statusManager.onTrackStart(player.guildId);
+        this.client.riffy.on('trackStart', async (player, track) => {
+            try {
+                const trackTitle = track?.info?.title || 'Unknown Track';
+                console.log(`🎵 Started playing: ${trackTitle} in ${player.guildId}`);
+                
+                if (this.client.statusManager) {
+                    await this.client.statusManager.onTrackStart(player.guildId);
+                }
+                
+                if (track && track.info) {
+                    const thumbnail = await this.getThumbnailSafely(track);
+                    await this.centralEmbed.updateCentralEmbed(player.guildId, {
+                        title: track.info.title || 'Unknown Title',
+                        author: track.info.author || 'Unknown Artist',
+                        duration: track.info.length || 0,
+                        thumbnail: thumbnail,
+                        requester: track.info.requester || null,
+                        paused: player.paused || false,
+                        volume: player.volume || 50,
+                        loop: player.loop || 'none',
+                        queueLength: player.queue.size || 0
+                    });
+                }
+            } catch (error) {
+                console.error('Track start error:', error.message);
             }
-            
-            if (track && track.info) {
-                const thumbnail = await this.getThumbnailSafely(track);
-                await this.centralEmbed.updateCentralEmbed(player.guildId, {
-                    title: track.info.title || 'Unknown Title',
-                    author: track.info.author || 'Unknown Artist',
-                    duration: track.info.length || 0,
-                    thumbnail: thumbnail,
-                    requester: track.info.requester || null,
-                    paused: player.paused || false,
-                    volume: player.volume || 50,
-                    loop: player.loop || 'none',
-                    queueLength: player.queue.size || 0
-                });
-            }
-        } catch (error) {
-            console.error('Track start error:', error.message);
-        }
-    });
+        });
 
-    this.client.riffy.on('trackEnd', async (player, track) => {
-        try {
-            const trackTitle = track?.info?.title || 'Unknown Track';
-            console.log(`🎵 Finished playing: ${trackTitle} in ${player.guildId}`);
-            
-            if (this.client.statusManager) {
-                await this.client.statusManager.onTrackEnd(player.guildId);
+        this.client.riffy.on('trackEnd', async (player, track) => {
+            try {
+                const trackTitle = track?.info?.title || 'Unknown Track';
+                console.log(`🎵 Finished playing: ${trackTitle} in ${player.guildId}`);
+                
+                if (this.client.statusManager) {
+                    await this.client.statusManager.onTrackEnd(player.guildId);
+                }
+            } catch (error) {
+                console.error('Track end error (handled):', error.message);
             }
-        } catch (error) {
-            console.error('Track end error (handled):', error.message);
-        }
-    });
+        });
 
-    // ✅ NOVO: trackError - kad pesma ne može da se pusti
-    this.client.riffy.on('trackError', async (player, track, payload) => {
-        try {
-            console.error(`❌ Track error in ${player.guildId}:`, payload?.exception?.message || 'Unknown error');
-            // Preskoči na sledeću pesmu umesto da se zamrzne
-            if (player.queue.size > 0) {
-                await player.play();
-            } else {
-                player.destroy();
+        this.client.riffy.on('trackError', async (player, track, payload) => {
+            try {
+                console.error(`❌ Track error in ${player.guildId}:`, payload?.exception?.message || 'Unknown error');
+                if (player.queue.size > 0) {
+                    await player.play();
+                } else {
+                    player.destroy();
+                }
+            } catch (error) {
+                console.error('Track error handler failed:', error.message);
             }
-        } catch (error) {
-            console.error('Track error handler failed:', error.message);
-        }
-    });
+        });
 
-    // ✅ NOVO: trackStuck - kad se pesma zaglavi (tvoj problem #2 - pesma kreće iz početka)
-    this.client.riffy.on('trackStuck', async (player, track, payload) => {
-        try {
-            console.warn(`⚠️ Track stuck in ${player.guildId}, skipping...`);
-            if (player.queue.size > 0) {
-                await player.play();
-            } else {
-                player.destroy();
+        this.client.riffy.on('trackStuck', async (player, track, payload) => {
+            try {
+                console.warn(`⚠️ Track stuck in ${player.guildId}, skipping...`);
+                if (player.queue.size > 0) {
+                    await player.play();
+                } else {
+                    player.destroy();
+                }
+            } catch (error) {
+                console.error('Track stuck handler failed:', error.message);
             }
-        } catch (error) {
-            console.error('Track stuck handler failed:', error.message);
-        }
-    });
+        });
 
-    this.client.riffy.on('queueEnd', async (player) => {
-        try {
-            console.log(`🎵 Queue ended in ${player.guildId}`);
-            await this.centralEmbed.updateCentralEmbed(player.guildId, null);
-            const serverConfig = await require('../models/Server').findById(player.guildId);
-            if (serverConfig?.settings?.autoplay) {
-                player.isAutoplay = true;
+        this.client.riffy.on('queueEnd', async (player) => {
+            try {
+                console.log(`🎵 Queue ended in ${player.guildId}`);
+                await this.centralEmbed.updateCentralEmbed(player.guildId, null);
+                const serverConfig = await require('../models/Server').findById(player.guildId);
+                if (serverConfig?.settings?.autoplay) {
+                    player.isAutoplay = true;
+                }
+                if (player.isAutoplay) {
+                    player.autoplay(player);
+                } else {
+                    if (this.client.statusManager) {
+                        await this.client.statusManager.onPlayerDisconnect(player.guildId);
+                    }
+                    player.destroy();
+                }
+            } catch (error) {
+                console.error('Queue end error:', error.message);
+                try { player.destroy(); } catch (e) {}
             }
-            if (player.isAutoplay) {
-                player.autoplay(player);
-            } else {
+        });
+
+        this.client.riffy.on('playerCreate', async (player) => {
+            console.log(`🎵 Player created for guild ${player.guildId}`);
+        });
+
+        this.client.riffy.on('playerDisconnect', async (player) => {
+            try {
+                console.log(`🎵 Player disconnected for guild ${player.guildId}`);
                 if (this.client.statusManager) {
                     await this.client.statusManager.onPlayerDisconnect(player.guildId);
                 }
-                player.destroy();
+                await this.centralEmbed.updateCentralEmbed(player.guildId, null);
+            } catch (error) {
+                console.error('Player disconnect error:', error.message);
             }
-        } catch (error) {
-            console.error('Queue end error:', error.message);
-            try { player.destroy(); } catch (e) {}
-        }
-    });
+        });
 
-    this.client.riffy.on('playerCreate', async (player) => {
-        console.log(`🎵 Player created for guild ${player.guildId}`);
-    });
+        this.client.riffy.on('nodeError', (node, error) => {
+            console.error(`🔴 Node "${node.name}" error:`, error.message);
+        });
 
-    this.client.riffy.on('playerDisconnect', async (player) => {
-        try {
-            console.log(`🎵 Player disconnected for guild ${player.guildId}`);
-            if (this.client.statusManager) {
-                await this.client.statusManager.onPlayerDisconnect(player.guildId);
-            }
-            await this.centralEmbed.updateCentralEmbed(player.guildId, null);
-        } catch (error) {
-            console.error('Player disconnect error:', error.message);
-        }
-    });
-
-    this.client.riffy.on('nodeError', (node, error) => {
-        console.error(`🔴 Node "${node.name}" error:`, error.message);
-    });
-
-    // ✅ NOVO: nodeDisconnect sa reconnect logikom (tvoj problem #1 - thinking zauvek)
-    this.client.riffy.on('nodeDisconnect', (node) => {
-        console.warn(`🟡 Node "${node.name}" disconnected. Reconnecting in 5s...`);
-        
-        setTimeout(async () => {
-            try {
-                await node.connect();
-                console.log(`✅ Node "${node.name}" reconnected!`);
-            } catch (err) {
-                console.error(`❌ Node reconnect failed:`, err.message);
-            }
-        }, 5000);
-    });
-
-    // ✅ NOVO: nodeConnect - kad se node reconnektuje, restartuj sve broken playere
-    this.client.riffy.on('nodeConnect', async (node) => {
-        console.log(`✅ Node "${node.name}" connected`);
-        
-        // Daj mu 2 sekunde da se stabilizuje
-        setTimeout(async () => {
-            for (const [guildId, player] of this.client.riffy.players) {
+        this.client.riffy.on('nodeDisconnect', (node) => {
+            console.warn(`🟡 Node "${node.name}" disconnected. Reconnecting in 5s...`);
+            
+            setTimeout(async () => {
                 try {
-                    if (player.current && !player.playing) {
-                        console.log(`🔄 Restarting player for guild ${guildId}`);
-                        await player.play();
-                    }
+                    await node.connect();
+                    console.log(`✅ Node "${node.name}" reconnected!`);
                 } catch (err) {
-                    console.error(`❌ Failed to restart player for ${guildId}:`, err.message);
-                    try { player.destroy(); } catch (e) {}
+                    console.error(`❌ Node reconnect failed:`, err.message);
                 }
-            }
-        }, 2000);
-    });
+            }, 5000);
+        });
+
+        this.client.riffy.on('nodeConnect', async (node) => {
+            console.log(`✅ Node "${node.name}" connected`);
+            
+            setTimeout(async () => {
+                for (const [guildId, player] of this.client.riffy.players) {
+                    try {
+                        if (player.current && !player.playing) {
+                            console.log(`🔄 Restarting player for guild ${guildId}`);
+                            await player.play();
+                        }
+                    } catch (err) {
+                        console.error(`❌ Failed to restart player for ${guildId}:`, err.message);
+                        try { player.destroy(); } catch (e) {}
+                    }
+                }
+            }, 2000);
+        });
+    }
 }
+
+module.exports = PlayerHandler;
