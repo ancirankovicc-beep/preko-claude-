@@ -33,7 +33,7 @@ class EnterpriseConfigurationManager {
     host: EnvironmentVariableProcessor.LAVALINK_HOST || "de.kerit.cloud",
     port: EnvironmentVariableProcessor.LAVALINK_PORT || 9363,
     password: EnvironmentVariableProcessor.LAVALINK_PASSWORD || "stevinaanci",
-    secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || false
+    secure: EnvironmentVariableProcessor.LAVALINK_SECURE === 'true' || true
 },
             
             /**
